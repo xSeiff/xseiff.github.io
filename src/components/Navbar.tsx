@@ -1,4 +1,4 @@
-﻿import { useState } from "react";
+import { useState } from "react";
 import { MessageSquare, Copy, Check, Menu, X, Sparkles } from "lucide-react";
 import { GithubIcon } from "./icons";
 
@@ -70,7 +70,7 @@ export function Navbar({ discordHandle }: NavbarProps) {
           </button>
 
           <a
-            href="https://github.com/xseif"
+            href="https://github.com/xSeiff"
             target="_blank"
             rel="noreferrer"
             className="flex h-8 w-8 items-center justify-center rounded-lg border border-zinc-800 bg-zinc-900/80 text-zinc-400 hover:border-zinc-700 hover:text-white transition-colors"

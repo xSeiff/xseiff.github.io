@@ -1,4 +1,4 @@
-﻿import React, { useState } from "react";
+import React, { useState } from "react";
 import { MessageSquare, Mail, Copy, Check, Send, Sparkles, Loader2, AlertCircle } from "lucide-react";
 import { GithubIcon } from "./icons";
 
@@ -162,7 +162,7 @@ export function ContactSection({ discordHandle }: ContactSectionProps) {
 
                 {/* GitHub */}
                 <a
-                  href="https://github.com/xseif"
+                  href="https://github.com/xSeiff"
                   target="_blank"
                   rel="noreferrer"
                   className="flex items-center justify-between rounded-xl border border-zinc-800 bg-zinc-900/40 p-3.5 backdrop-blur-sm hover:border-zinc-700 transition-colors"
@@ -173,7 +173,7 @@ export function ContactSection({ discordHandle }: ContactSectionProps) {
                     </div>
                     <div>
                       <div className="text-xs text-zinc-400 font-mono">Open Source</div>
-                      <div className="text-sm font-semibold text-white font-mono">github.com/xseif</div>
+                      <div className="text-sm font-semibold text-white font-mono">github.com/xSeiff</div>
                     </div>
                   </div>
                   <span className="text-xs font-medium text-zinc-400">Visit Profile →</span>
