@@ -22,25 +22,41 @@
   background: #3f3f46;
 }
 
-/* Architecture Showcase Blur Fade Transitions */
-.tab-content-enter {
-  opacity: 1;
-  filter: blur(0px);
-  transform: translateY(0px) scale(1);
-  transition: opacity 280ms cubic-bezier(0.16, 1, 0.3, 1),
-              filter 280ms cubic-bezier(0.16, 1, 0.3, 1),
-              transform 280ms cubic-bezier(0.16, 1, 0.3, 1);
-  will-change: opacity, filter, transform;
+/* Architecture Showcase Kinetic Flying Words & Staggered Animations */
+@keyframes flyWord {
+  0% {
+    opacity: 0;
+    transform: translateY(14px) scale(0.96);
+    filter: blur(6px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0px);
+  }
 }
 
-.tab-content-exit {
-  opacity: 0;
-  filter: blur(10px);
-  transform: translateY(4px) scale(0.985);
-  transition: opacity 160ms cubic-bezier(0.4, 0, 1, 1),
-              filter 160ms cubic-bezier(0.4, 0, 1, 1),
-              transform 160ms cubic-bezier(0.4, 0, 1, 1);
-  will-change: opacity, filter, transform;
-  pointer-events: none;
+.animate-fly-word {
+  animation: flyWord 0.24s cubic-bezier(0.16, 1, 0.3, 1) both;
+  will-change: transform, opacity, filter;
 }
+
+@keyframes flyStep {
+  0% {
+    opacity: 0;
+    transform: translateX(12px);
+    filter: blur(4px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+    filter: blur(0px);
+  }
+}
+
+.animate-fly-step {
+  animation: flyStep 0.22s cubic-bezier(0.16, 1, 0.3, 1) both;
+  will-change: transform, opacity, filter;
+}
+
 
