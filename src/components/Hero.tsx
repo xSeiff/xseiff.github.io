@@ -1,5 +1,6 @@
 ﻿import { useState } from "react";
 import { ArrowRight, Copy, Check, Terminal, Server, ShieldCheck, MessageSquare } from "lucide-react";
+import { ParticleBackground } from "./ParticleBackground";
 
 interface HeroProps {
   discordHandle: string;
@@ -16,11 +17,10 @@ export function Hero({ discordHandle }: HeroProps) {
 
   return (
     <section className="relative overflow-hidden pt-20 pb-16 md:pt-28 md:pb-24 border-b border-zinc-800/60">
-      {/* Background radial gradient glow */}
-      <div className="pointer-events-none absolute -top-40 left-1/2 -translate-x-1/2 h-96 w-[700px] rounded-full bg-gradient-to-b from-indigo-500/10 via-purple-500/5 to-transparent blur-3xl" />
-      <div className="pointer-events-none absolute top-1/3 -left-32 h-64 w-64 rounded-full bg-blue-500/5 blur-3xl" />
+      {/* Interactive dynamic particle canvas & mouse spotlight */}
+      <ParticleBackground />
 
-      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 relative">
+      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
           
           {/* Left Column: Bio & Value Proposition */}
@@ -107,7 +107,7 @@ export function Hero({ discordHandle }: HeroProps) {
                   <span className="ml-2 font-mono text-xs text-zinc-400">security-harness.py</span>
                 </div>
                 <div className="flex items-center gap-1.5 text-[11px] font-mono text-emerald-400">
-                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
                   STRESS-TEST READY
                 </div>
               </div>
