@@ -1,8 +1,30 @@
-import { useState } from "react";
-import { Layers, Server, Cpu, Check } from "lucide-react";
+import { useState, useRef, useEffect } from "react";
+import { Layers, Server, Cpu, Check, ArrowDown } from "lucide-react";
 
 export function ArchitectureShowcase() {
   const [activeTab, setActiveTab] = useState<"ticket" | "media">("ticket");
+  const [displayTab, setDisplayTab] = useState<"ticket" | "media">("ticket");
+  const [isFadingOut, setIsFadingOut] = useState(false);
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    };
+  }, []);
+
+  const handleTabChange = (nextTab: "ticket" | "media") => {
+    if (nextTab === activeTab) return;
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+
+    setActiveTab(nextTab);
+    setIsFadingOut(true);
+
+    timeoutRef.current = setTimeout(() => {
+      setDisplayTab(nextTab);
+      setIsFadingOut(false);
+    }, 160);
+  };
 
   return (
     <section id="architecture" className="py-20 border-b border-zinc-800/80 relative">
@@ -25,8 +47,8 @@ export function ArchitectureShowcase() {
         {/* Tab Switcher */}
         <div className="mt-8 flex gap-2 border-b border-zinc-800/80 pb-px">
           <button
-            onClick={() => setActiveTab("ticket")}
-            className={`flex items-center gap-2 px-4 py-2.5 text-xs sm:text-sm font-medium transition-all border-b-2 font-mono ${
+            onClick={() => handleTabChange("ticket")}
+            className={`flex items-center gap-2 px-4 py-2.5 text-xs sm:text-sm font-medium transition-all border-b-2 font-mono cursor-pointer ${
               activeTab === "ticket"
                 ? "border-indigo-500 text-white bg-zinc-900/40"
                 : "border-transparent text-zinc-500 hover:text-zinc-300"
@@ -37,8 +59,8 @@ export function ArchitectureShowcase() {
           </button>
 
           <button
-            onClick={() => setActiveTab("media")}
-            className={`flex items-center gap-2 px-4 py-2.5 text-xs sm:text-sm font-medium transition-all border-b-2 font-mono ${
+            onClick={() => handleTabChange("media")}
+            className={`flex items-center gap-2 px-4 py-2.5 text-xs sm:text-sm font-medium transition-all border-b-2 font-mono cursor-pointer ${
               activeTab === "media"
                 ? "border-pink-500 text-white bg-zinc-900/40"
                 : "border-transparent text-zinc-500 hover:text-zinc-300"
@@ -49,132 +71,153 @@ export function ArchitectureShowcase() {
           </button>
         </div>
 
-        {/* Architecture Content */}
-        <div className="mt-8 rounded-2xl border border-zinc-800/90 bg-zinc-900/30 p-6 sm:p-8 backdrop-blur-sm">
-          {activeTab === "ticket" ? (
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-              <div className="lg:col-span-5 space-y-4">
-                <div className="inline-block rounded border border-indigo-500/20 bg-indigo-500/10 px-2.5 py-0.5 text-[11px] font-mono font-medium text-indigo-300">
-                  Full-Stack Distributed System
+        {/* Architecture Content Container */}
+        <div className="mt-8 rounded-2xl border border-zinc-800/90 bg-zinc-900/30 p-6 sm:p-8 backdrop-blur-sm overflow-hidden min-h-[440px] flex items-center">
+          <div className={`w-full ${isFadingOut ? "tab-content-exit" : "tab-content-enter"}`}>
+            {displayTab === "ticket" ? (
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+                <div className="lg:col-span-5 space-y-4">
+                  <div className="inline-block rounded border border-indigo-500/20 bg-indigo-500/10 px-2.5 py-0.5 text-[11px] font-mono font-medium text-indigo-300">
+                    Full-Stack Distributed System
+                  </div>
+                  <h3 className="text-xl font-bold text-white">
+                    Bidirectional Event Synchronization
+                  </h3>
+                  <p className="text-sm text-zinc-400 leading-relaxed">
+                    The TicketBot integrates Discord Gateway WebSocket events with an Express & Vite web application via a normalized PostgreSQL/SQLite database managed by Drizzle ORM.
+                  </p>
+
+                  <ul className="space-y-2 text-xs text-zinc-300 font-mono">
+                    <li className="flex items-center gap-2">
+                      <Check className="h-3.5 w-3.5 text-emerald-400" />
+                      <span>Discord OAuth2 session authentication & RBAC</span>
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <Check className="h-3.5 w-3.5 text-emerald-400" />
+                      <span>Real-time channel permissions & ephemeral controls</span>
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <Check className="h-3.5 w-3.5 text-emerald-400" />
+                      <span>Automated HTML/JSON transcript archiving</span>
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <Check className="h-3.5 w-3.5 text-emerald-400" />
+                      <span>Caddy reverse proxy with automated Let's Encrypt SSL</span>
+                    </li>
+                  </ul>
                 </div>
-                <h3 className="text-xl font-bold text-white">
-                  Bidirectional Event Synchronization
-                </h3>
-                <p className="text-sm text-zinc-400 leading-relaxed">
-                  The TicketBot integrates Discord Gateway WebSocket events with an Express & Vite web application via a normalized PostgreSQL/SQLite database managed by Drizzle ORM.
-                </p>
 
-                <ul className="space-y-2 text-xs text-zinc-300 font-mono">
-                  <li className="flex items-center gap-2">
-                    <Check className="h-3.5 w-3.5 text-emerald-400" />
-                    <span>Discord OAuth2 session authentication & RBAC</span>
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <Check className="h-3.5 w-3.5 text-emerald-400" />
-                    <span>Real-time channel permissions & ephemeral controls</span>
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <Check className="h-3.5 w-3.5 text-emerald-400" />
-                    <span>Automated HTML/JSON transcript archiving</span>
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <Check className="h-3.5 w-3.5 text-emerald-400" />
-                    <span>Caddy reverse proxy with automated Let's Encrypt SSL</span>
-                  </li>
-                </ul>
-              </div>
-
-              <div className="lg:col-span-7">
-                <div className="rounded-xl border border-zinc-800 bg-zinc-950 p-5 font-mono text-xs text-zinc-300">
-                  <div className="text-zinc-500 mb-3">// Architecture Workflow</div>
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between p-2.5 rounded bg-zinc-900 border border-zinc-800">
-                      <span className="text-indigo-300">1. Client / Staff</span>
-                      <span className="text-zinc-500">Discord User / Web Admin</span>
-                    </div>
-                    <div className="text-center text-zinc-600">? (Slash Commands & OAuth2 Webhooks)</div>
-                    <div className="flex items-center justify-between p-2.5 rounded bg-zinc-900 border border-zinc-800">
-                      <span className="text-indigo-300">2. Gateway & API Layer</span>
-                      <span className="text-zinc-500">Discord.js v14 + Express Router</span>
-                    </div>
-                    <div className="text-center text-zinc-600">? (Drizzle Queries / Migrations)</div>
-                    <div className="flex items-center justify-between p-2.5 rounded bg-zinc-900 border border-zinc-800">
-                      <span className="text-indigo-300">3. Persistence & Cache</span>
-                      <span className="text-zinc-500">PostgreSQL / SQLite Storage</span>
-                    </div>
-                    <div className="text-center text-zinc-600">? (Automated Exports)</div>
-                    <div className="flex items-center justify-between p-2.5 rounded bg-zinc-900 border border-zinc-800">
-                      <span className="text-indigo-300">4. Transcripts & CDN</span>
-                      <span className="text-zinc-500">Static HTML Mirror + Attachment Storage</span>
+                <div className="lg:col-span-7">
+                  <div className="rounded-xl border border-zinc-800 bg-zinc-950 p-5 font-mono text-xs text-zinc-300">
+                    <div className="text-zinc-500 mb-3">// Architecture Workflow</div>
+                    <div className="space-y-2.5">
+                      <div className="flex items-center justify-between p-2.5 rounded bg-zinc-900 border border-zinc-800">
+                        <span className="text-indigo-300">1. Client / Staff</span>
+                        <span className="text-zinc-500">Discord User / Web Admin</span>
+                      </div>
+                      <div className="flex items-center justify-center gap-1.5 text-zinc-500 py-0.5">
+                        <ArrowDown className="h-3.5 w-3.5 text-indigo-400/80" />
+                        <span className="text-[11px] text-zinc-400">Slash Commands & OAuth2 Webhooks</span>
+                      </div>
+                      <div className="flex items-center justify-between p-2.5 rounded bg-zinc-900 border border-zinc-800">
+                        <span className="text-indigo-300">2. Gateway & API Layer</span>
+                        <span className="text-zinc-500">Discord.js v14 + Express Router</span>
+                      </div>
+                      <div className="flex items-center justify-center gap-1.5 text-zinc-500 py-0.5">
+                        <ArrowDown className="h-3.5 w-3.5 text-indigo-400/80" />
+                        <span className="text-[11px] text-zinc-400">Drizzle Queries / Migrations</span>
+                      </div>
+                      <div className="flex items-center justify-between p-2.5 rounded bg-zinc-900 border border-zinc-800">
+                        <span className="text-indigo-300">3. Persistence & Cache</span>
+                        <span className="text-zinc-500">PostgreSQL / SQLite Storage</span>
+                      </div>
+                      <div className="flex items-center justify-center gap-1.5 text-zinc-500 py-0.5">
+                        <ArrowDown className="h-3.5 w-3.5 text-indigo-400/80" />
+                        <span className="text-[11px] text-zinc-400">Automated Exports</span>
+                      </div>
+                      <div className="flex items-center justify-between p-2.5 rounded bg-zinc-900 border border-zinc-800">
+                        <span className="text-indigo-300">4. Transcripts & CDN</span>
+                        <span className="text-zinc-500">Static HTML Mirror + Attachment Storage</span>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-              <div className="lg:col-span-5 space-y-4">
-                <div className="inline-block rounded border border-pink-500/20 bg-pink-500/10 px-2.5 py-0.5 text-[11px] font-mono font-medium text-pink-300">
-                  Headless Media Engine
+            ) : (
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+                <div className="lg:col-span-5 space-y-4">
+                  <div className="inline-block rounded border border-pink-500/20 bg-pink-500/10 px-2.5 py-0.5 text-[11px] font-mono font-medium text-pink-300">
+                    Headless Media Engine
+                  </div>
+                  <h3 className="text-xl font-bold text-white">
+                    Automated Video Compositing Pipeline
+                  </h3>
+                  <p className="text-sm text-zinc-400 leading-relaxed">
+                    A high-throughput video processing runner built in Python. Handles RTL Arabic typography shaping, audio frequency analysis, dynamic subtitle synchronization, and automated social publishing.
+                  </p>
+
+                  <ul className="space-y-2 text-xs text-zinc-300 font-mono">
+                    <li className="flex items-center gap-2">
+                      <Check className="h-3.5 w-3.5 text-emerald-400" />
+                      <span>HarfBuzz & FriBidi sub-pixel Arabic ligatures</span>
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <Check className="h-3.5 w-3.5 text-emerald-400" />
+                      <span>Hardware-accelerated NVENC FFmpeg encoding (3.8x speed)</span>
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <Check className="h-3.5 w-3.5 text-emerald-400" />
+                      <span>Audio-reactive waveforms matched to vocal track</span>
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <Check className="h-3.5 w-3.5 text-emerald-400" />
+                      <span>Cron/interval background scheduler for social distribution</span>
+                    </li>
+                  </ul>
                 </div>
-                <h3 className="text-xl font-bold text-white">
-                  Automated Video Compositing Pipeline
-                </h3>
-                <p className="text-sm text-zinc-400 leading-relaxed">
-                  A high-throughput video processing runner built in Python. Handles RTL Arabic typography shaping, audio frequency analysis, dynamic subtitle synchronization, and automated social publishing.
-                </p>
 
-                <ul className="space-y-2 text-xs text-zinc-300 font-mono">
-                  <li className="flex items-center gap-2">
-                    <Check className="h-3.5 w-3.5 text-emerald-400" />
-                    <span>HarfBuzz & FriBidi sub-pixel Arabic ligatures</span>
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <Check className="h-3.5 w-3.5 text-emerald-400" />
-                    <span>Hardware-accelerated NVENC FFmpeg encoding (3.8x speed)</span>
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <Check className="h-3.5 w-3.5 text-emerald-400" />
-                    <span>Audio-reactive waveforms matched to vocal track</span>
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <Check className="h-3.5 w-3.5 text-emerald-400" />
-                    <span>Cron/interval background scheduler for social distribution</span>
-                  </li>
-                </ul>
-              </div>
-
-              <div className="lg:col-span-7">
-                <div className="rounded-xl border border-zinc-800 bg-zinc-950 p-5 font-mono text-xs text-zinc-300">
-                  <div className="text-zinc-500 mb-3">// Media Pipeline Workflow</div>
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between p-2.5 rounded bg-zinc-900 border border-zinc-800">
-                      <span className="text-pink-300">1. Ingestion & Audio</span>
-                      <span className="text-zinc-500">Recitation Audio + Background Loops</span>
-                    </div>
-                    <div className="text-center text-zinc-600">? (RTL FriBidi & HarfBuzz)</div>
-                    <div className="flex items-center justify-between p-2.5 rounded bg-zinc-900 border border-zinc-800">
-                      <span className="text-pink-300">2. Text Shaping & Subtitles</span>
-                      <span className="text-zinc-500">Amiri Font + libass Subtitle Burn</span>
-                    </div>
-                    <div className="text-center text-zinc-600">? (NVENC / FFmpeg Compositor)</div>
-                    <div className="flex items-center justify-between p-2.5 rounded bg-zinc-900 border border-zinc-800">
-                      <span className="text-pink-300">3. Hardware GPU Render</span>
-                      <span className="text-zinc-500">1080x1920 (9:16) 60fps MP4</span>
-                    </div>
-                    <div className="text-center text-zinc-600">? (Automated Dispatch)</div>
-                    <div className="flex items-center justify-between p-2.5 rounded bg-zinc-900 border border-zinc-800">
-                      <span className="text-pink-300">4. Scheduled Publishing</span>
-                      <span className="text-zinc-500">Discord Webhooks / TikTok Upload</span>
+                <div className="lg:col-span-7">
+                  <div className="rounded-xl border border-zinc-800 bg-zinc-950 p-5 font-mono text-xs text-zinc-300">
+                    <div className="text-zinc-500 mb-3">// Media Pipeline Workflow</div>
+                    <div className="space-y-2.5">
+                      <div className="flex items-center justify-between p-2.5 rounded bg-zinc-900 border border-zinc-800">
+                        <span className="text-pink-300">1. Ingestion & Audio</span>
+                        <span className="text-zinc-500">Recitation Audio + Background Loops</span>
+                      </div>
+                      <div className="flex items-center justify-center gap-1.5 text-zinc-500 py-0.5">
+                        <ArrowDown className="h-3.5 w-3.5 text-pink-400/80" />
+                        <span className="text-[11px] text-zinc-400">RTL FriBidi & HarfBuzz</span>
+                      </div>
+                      <div className="flex items-center justify-between p-2.5 rounded bg-zinc-900 border border-zinc-800">
+                        <span className="text-pink-300">2. Text Shaping & Subtitles</span>
+                        <span className="text-zinc-500">Amiri Font + libass Subtitle Burn</span>
+                      </div>
+                      <div className="flex items-center justify-center gap-1.5 text-zinc-500 py-0.5">
+                        <ArrowDown className="h-3.5 w-3.5 text-pink-400/80" />
+                        <span className="text-[11px] text-zinc-400">NVENC / FFmpeg Compositor</span>
+                      </div>
+                      <div className="flex items-center justify-between p-2.5 rounded bg-zinc-900 border border-zinc-800">
+                        <span className="text-pink-300">3. Hardware GPU Render</span>
+                        <span className="text-zinc-500">1080x1920 (9:16) 60fps MP4</span>
+                      </div>
+                      <div className="flex items-center justify-center gap-1.5 text-zinc-500 py-0.5">
+                        <ArrowDown className="h-3.5 w-3.5 text-pink-400/80" />
+                        <span className="text-[11px] text-zinc-400">Automated Dispatch</span>
+                      </div>
+                      <div className="flex items-center justify-between p-2.5 rounded bg-zinc-900 border border-zinc-800">
+                        <span className="text-pink-300">4. Scheduled Publishing</span>
+                        <span className="text-zinc-500">Discord Webhooks / TikTok Upload</span>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
-          )}
+            )}
+          </div>
         </div>
 
       </div>
     </section>
   );
 }
+
