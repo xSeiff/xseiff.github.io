@@ -25,27 +25,24 @@ export function ParticleBackground() {
     let width = (canvas.width = canvas.parentElement?.offsetWidth || window.innerWidth);
     let height = (canvas.height = canvas.parentElement?.offsetHeight || window.innerHeight);
 
-    // Mouse tracking with smooth lerp
+    // Mouse tracking for particle repulsion only
     const mouse = {
-      x: width / 2,
-      y: height / 2,
-      targetX: width / 2,
-      targetY: height / 2,
-      radius: 140,
-      isHovering: false,
+      x: -1000,
+      y: -1000,
+      targetX: -1000,
+      targetY: -1000,
+      radius: 130, // Repulsion radius
     };
 
     const handleMouseMove = (e: MouseEvent) => {
       const rect = canvas.getBoundingClientRect();
       mouse.targetX = e.clientX - rect.left;
       mouse.targetY = e.clientY - rect.top;
-      mouse.isHovering = true;
     };
 
     const handleMouseLeave = () => {
-      mouse.isHovering = false;
-      mouse.targetX = width / 2;
-      mouse.targetY = height / 2;
+      mouse.targetX = -1000;
+      mouse.targetY = -1000;
     };
 
     window.addEventListener("mousemove", handleMouseMove);
@@ -58,26 +55,26 @@ export function ParticleBackground() {
     };
     window.addEventListener("resize", handleResize);
 
-    // Color palette matching developer / cybersecurity theme
+    // Palette matching developer & cybersecurity theme
     const colors = [
       "rgba(99, 102, 241,", // Indigo
       "rgba(88, 101, 242,", // Discord Blurple
       "rgba(56, 189, 248,", // Cyan
       "rgba(168, 85, 247,", // Purple
-      "rgba(52, 211, 153,", // Emerald accent
+      "rgba(52, 211, 153,", // Emerald
     ];
 
-    // Determine particle count based on screen size
-    const particleCount = Math.min(Math.floor((width * height) / 12000), 85);
+    // Particle density
+    const particleCount = Math.min(Math.floor((width * height) / 11000), 90);
     const particles: Particle[] = [];
 
     for (let i = 0; i < particleCount; i++) {
-      const baseAlpha = Math.random() * 0.4 + 0.2;
+      const baseAlpha = Math.random() * 0.45 + 0.25;
       particles.push({
         x: Math.random() * width,
         y: Math.random() * height,
-        vx: (Math.random() - 0.5) * 0.6,
-        vy: (Math.random() - 0.5) * 0.6,
+        vx: (Math.random() - 0.5) * 0.65,
+        vy: (Math.random() - 0.5) * 0.65,
         radius: Math.random() * 1.8 + 1,
         alpha: baseAlpha,
         baseAlpha,
@@ -85,31 +82,13 @@ export function ParticleBackground() {
       });
     }
 
-    // Animation render loop
+    // Animation loop
     const render = () => {
       ctx.clearRect(0, 0, width, height);
 
       // Smooth mouse interpolation
-      mouse.x += (mouse.targetX - mouse.x) * 0.08;
-      mouse.y += (mouse.targetY - mouse.y) * 0.08;
-
-      // Draw interactive glowing mouse spotlight in the background
-      const spotlightRadius = width < 640 ? 200 : 350;
-      const gradient = ctx.createRadialGradient(
-        mouse.x,
-        mouse.y,
-        0,
-        mouse.x,
-        mouse.y,
-        spotlightRadius
-      );
-      gradient.addColorStop(0, "rgba(99, 102, 241, 0.12)");
-      gradient.addColorStop(0.35, "rgba(88, 101, 242, 0.05)");
-      gradient.addColorStop(0.7, "rgba(168, 85, 247, 0.015)");
-      gradient.addColorStop(1, "rgba(9, 9, 11, 0)");
-
-      ctx.fillStyle = gradient;
-      ctx.fillRect(0, 0, width, height);
+      mouse.x += (mouse.targetX - mouse.x) * 0.12;
+      mouse.y += (mouse.targetY - mouse.y) * 0.12;
 
       // Connect nearby particles with subtle cyber web lines
       const maxDistance = 110;
@@ -120,7 +99,7 @@ export function ParticleBackground() {
           const dist = Math.sqrt(dx * dx + dy * dy);
 
           if (dist < maxDistance) {
-            const lineAlpha = (1 - dist / maxDistance) * 0.15;
+            const lineAlpha = (1 - dist / maxDistance) * 0.16;
             ctx.strokeStyle = `rgba(129, 140, 248, ${lineAlpha})`;
             ctx.lineWidth = 0.8;
             ctx.beginPath();
@@ -139,22 +118,24 @@ export function ParticleBackground() {
         p.x += p.vx;
         p.y += p.vy;
 
-        // Bounce off canvas edges
-        if (p.x < 0 || p.x > width) p.vx *= -1;
-        if (p.y < 0 || p.y > height) p.vy *= -1;
+        // Wrap around canvas edges smoothly
+        if (p.x < 0) p.x = width;
+        if (p.x > width) p.x = 0;
+        if (p.y < 0) p.y = height;
+        if (p.y > height) p.y = 0;
 
-        // Mouse repulsion & interaction
+        // Mouse repulsion: particles get scared and dodge the cursor
         const dx = mouse.x - p.x;
         const dy = mouse.y - p.y;
         const dist = Math.sqrt(dx * dx + dy * dy);
 
-        if (dist < mouse.radius) {
+        if (dist < mouse.radius && mouse.x > 0) {
           const force = (mouse.radius - dist) / mouse.radius;
           const angle = Math.atan2(dy, dx);
-          // Gently push particle away from mouse cursor
-          p.x -= Math.cos(angle) * force * 2.5;
-          p.y -= Math.sin(angle) * force * 2.5;
-          p.alpha = Math.min(p.baseAlpha + force * 0.6, 0.9);
+          // Push particle away rapidly
+          p.x -= Math.cos(angle) * force * 4.5;
+          p.y -= Math.sin(angle) * force * 4.5;
+          p.alpha = Math.min(p.baseAlpha + force * 0.7, 1);
         } else {
           p.alpha += (p.baseAlpha - p.alpha) * 0.05;
         }
