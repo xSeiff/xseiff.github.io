@@ -1,4 +1,4 @@
-﻿import { 
+import { 
   Ticket, 
   Video, 
   Gauge, 
@@ -14,6 +14,7 @@
   ArrowUpRight, 
   CheckCircle2
 } from "lucide-react";
+import { GithubIcon } from "./icons";
 import type { Project } from "../data/projects";
 
 interface ProjectCardProps {
@@ -68,11 +69,16 @@ export function ProjectCard({ project, onSelect }: ProjectCardProps) {
             <span className="rounded-full border border-zinc-800 bg-zinc-950/60 px-2.5 py-0.5 text-[11px] font-medium text-zinc-400 font-mono">
               {project.category}
             </span>
-            {project.featured && (
-              <span className="rounded-full border border-indigo-500/30 bg-indigo-500/10 px-2 py-0.5 text-[10px] font-semibold text-indigo-300">
-                FEATURED
+            {project.isPrivate ? (
+              <span className="rounded-full border border-amber-500/30 bg-amber-500/10 px-2 py-0.5 text-[10px] font-semibold text-amber-300 flex items-center gap-1 font-mono">
+                <Lock className="h-2.5 w-2.5" />
+                ENTERPRISE
               </span>
-            )}
+            ) : project.featured ? (
+              <span className="rounded-full border border-indigo-500/30 bg-indigo-500/10 px-2 py-0.5 text-[10px] font-semibold text-indigo-300 font-mono">
+                FLAGSHIP
+              </span>
+            ) : null}
           </div>
         </div>
 
@@ -131,6 +137,30 @@ export function ProjectCard({ project, onSelect }: ProjectCardProps) {
               +{project.techStack.length - 4} more
             </span>
           )}
+        </div>
+
+        {/* Bottom Direct Action Bar */}
+        <div className="mt-4 pt-3 border-t border-zinc-800/60 flex items-center justify-between text-xs font-mono">
+          <span className="text-zinc-500 group-hover:text-zinc-400 transition-colors">
+            Inspect System &rarr;
+          </span>
+          {project.githubUrl && !project.isPrivate ? (
+            <a
+              href={project.githubUrl}
+              target="_blank"
+              rel="noreferrer"
+              onClick={(e) => e.stopPropagation()}
+              className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-zinc-800/80 hover:bg-zinc-700 text-zinc-200 hover:text-white transition-colors border border-zinc-700/60 shadow-sm"
+            >
+              <GithubIcon className="h-3.5 w-3.5" />
+              <span>GitHub</span>
+            </a>
+          ) : project.isPrivate ? (
+            <span className="text-[11px] text-amber-400/80 flex items-center gap-1">
+              <Lock className="h-3 w-3" />
+              Private Client
+            </span>
+          ) : null}
         </div>
       </div>
     </div>

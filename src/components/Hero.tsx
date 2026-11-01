@@ -1,6 +1,7 @@
-﻿import { useState } from "react";
+import { useState } from "react";
 import { ArrowRight, Copy, Check, Terminal, Server, ShieldCheck, MessageSquare } from "lucide-react";
 import { ParticleBackground } from "./ParticleBackground";
+import { GithubIcon } from "./icons";
 
 interface HeroProps {
   discordHandle: string;
@@ -55,6 +56,16 @@ export function Hero({ discordHandle }: HeroProps) {
                 <ArrowRight className="h-4 w-4 text-zinc-800" />
               </a>
 
+              <a
+                href="https://github.com/xSeiff"
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-2 rounded-lg border border-zinc-800 bg-zinc-900/90 px-4 py-2.5 text-sm font-medium text-zinc-200 hover:border-zinc-700 hover:bg-zinc-850 hover:text-white transition-all active:scale-95 shadow-sm"
+              >
+                <GithubIcon className="h-4 w-4" />
+                <span>GitHub @xSeiff</span>
+              </a>
+
               <button
                 onClick={handleCopyDiscord}
                 className="inline-flex items-center gap-2 rounded-lg border border-zinc-800 bg-zinc-900/90 px-4 py-2.5 text-sm font-medium text-zinc-200 hover:border-zinc-700 hover:bg-zinc-850 hover:text-white transition-all active:scale-95 shadow-sm"
@@ -77,7 +88,7 @@ export function Hero({ discordHandle }: HeroProps) {
             {/* Global Developer Caliber Stats */}
             <div className="mt-12 grid grid-cols-2 sm:grid-cols-4 gap-6 pt-8 border-t border-zinc-800/80 w-full">
               <div>
-                <div className="text-2xl sm:text-3xl font-bold font-mono text-white">15+</div>
+                <div className="text-2xl sm:text-3xl font-bold font-mono text-white">12+</div>
                 <div className="text-xs text-zinc-400 mt-0.5">Production Systems</div>
               </div>
               <div>
